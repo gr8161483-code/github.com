@@ -1,165 +1,158 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html>
 <head>
-<meta charset="UTF-8">
-<title>Cronômetro Creed</title>
+  <meta charset="UTF-8">
+  <title>Timer</title>
 
-<style>
-  body {
-    margin: 0;
-    padding: 0;
-    overflow-x: hidden;
-    font-family: Arial, Helvetica, sans-serif;
-    background: transparent;
-  }
+  <style>
+    body {
+      margin: 0;
+      background: transparent;
+      font-family: Arial, sans-serif;
+    }
 
-  /* ✅ TARJA REMOVIDA — agora fica só o cronômetro */
-  .top-bar {
-    width: 100vw;
-    background: transparent;
-    padding: 14px 0;
-    display: flex;
-    justify-content: center;
+    .top-bar {
+      width: 100%;
+      background: #111;
+      padding: 14px 0;
+      display: flex;
+      justify-content: center;
+    }
 
-    position: relative;
-    left: 50%;
-    margin-left: -50vw;
-  }
+    .timer-box {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: #000;
+      padding: 14px 26px;
+      border-radius: 60px;
+      box-shadow: 0 0 18px rgba(180,180,180,0.25);
+      color: #fff;
+      font-weight: bold;
+      font-size: 14px;
+      letter-spacing: 0.5px;
+    }
 
-  .timer-box {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    background: #000;
-    padding: 14px 26px;
-    border-radius: 60px;
-    box-shadow: 0 0 18px rgba(180,180,180,0.25);
-    color: #fff;
-    font-weight: bold;
-    font-size: 14px;
-    letter-spacing: 0.5px;
-  }
+    .time-block {
+      text-align: center;
+      min-width: 55px;
+    }
 
-  .time-block {
-    text-align: center;
-    min-width: 55px;
-  }
+    .number {
+      font-size: 20px;
+      color: #e5e5e5;
+      font-weight: bold;
+    }
 
-  .number {
-    font-size: 20px;
-    color: #e5e5e5;
-    font-weight: bold;
-  }
+    .label {
+      font-size: 10px;
+      opacity: 0.7;
+    }
 
-  .label {
-    font-size: 10px;
-    opacity: 0.7;
-  }
+    .title {
+      margin-right: 6px;
+      font-size: 14px;
+      opacity: 0.85;
+      white-space: nowrap;
+    }
 
-  .title {
-    margin-right: 6px;
-    font-size: 14px;
-    opacity: 0.85;
-    white-space: nowrap;
-  }
+    .hourglass {
+      width: 16px;
+      height: 22px;
+      border: 2px solid #888;
+      border-radius: 6px;
+      position: relative;
+      overflow: hidden;
+    }
 
-  /* Ampulheta simples */
-  .hourglass {
-    width: 16px;
-    height: 22px;
-    border: 2px solid #888;
-    border-radius: 6px;
-    position: relative;
-    overflow: hidden;
-  }
+    .sand {
+      position: absolute;
+      width: 100%;
+      height: 50%;
+      background: #888;
+      animation: fall 3s linear infinite;
+    }
 
-  .sand {
-    position: absolute;
-    width: 100%;
-    height: 50%;
-    background: #888;
-    animation: fall 3s linear infinite;
-  }
-
-  @keyframes fall {
-    0% { top: 0%; height: 50%; }
-    100% { top: 50%; height: 0%; }
-  }
-</style>
+    @keyframes fall {
+      0% { top: 0%; height: 50%; }
+      100% { top: 50%; height: 0%; }
+    }
+  </style>
 </head>
 
 <body>
 
-<div class="top-bar">
-  <div class="timer-box">
+  <div class="top-bar">
+    <div class="timer-box">
 
-    <div class="hourglass">
-      <div class="sand"></div>
+      <div class="hourglass">
+        <div class="sand"></div>
+      </div>
+
+      <span class="title">Offer ends in:</span>
+
+      <div class="time-block">
+        <div class="number" id="days">07</div>
+        <div class="label">DAYS</div>
+      </div>
+
+      <div class="time-block">
+        <div class="number" id="hours">00</div>
+        <div class="label">HRS</div>
+      </div>
+
+      <div class="time-block">
+        <div class="number" id="minutes">00</div>
+        <div class="label">MIN</div>
+      </div>
+
+      <div class="time-block">
+        <div class="number" id="seconds">00</div>
+        <div class="label">SEC</div>
+      </div>
+
     </div>
-
-    <span class="title">Oferta acaba em:</span>
-
-    <div class="time-block">
-      <div class="number" id="days">07</div>
-      <div class="label">DIAS</div>
-    </div>
-
-    <div class="time-block">
-      <div class="number" id="hours">00</div>
-      <div class="label">HRS</div>
-    </div>
-
-    <div class="time-block">
-      <div class="number" id="minutes">00</div>
-      <div class="label">MIN</div>
-    </div>
-
-    <div class="time-block">
-      <div class="number" id="seconds">00</div>
-      <div class="label">SEG</div>
-    </div>
-
   </div>
-</div>
 
 <script>
 (function(){
 
-  const START_DAYS = 7;
-  const RESET_AT_DAY = 2;
+  var START_DAYS = 7;
+  var RESET_AT_DAY = 2;
 
-  const totalMs = START_DAYS * 24 * 60 * 60 * 1000;
+  var totalMs = START_DAYS * 24 * 60 * 60 * 1000;
 
-  let start = localStorage.getItem("creedTimerStart");
+  var start = sessionStorage.getItem("timerStart");
 
   if (!start) {
     start = Date.now();
-    localStorage.setItem("creedTimerStart", start);
+    sessionStorage.setItem("timerStart", start);
   } else {
     start = parseInt(start);
   }
 
   function updateTimer(){
-    let now = Date.now();
-    let remaining = totalMs - (now - start);
 
-    let days = Math.floor(remaining / (1000*60*60*24));
+    var now = Date.now();
+    var remaining = totalMs - (now - start);
+
+    var days = Math.floor(remaining / (1000*60*60*24));
 
     if (days <= RESET_AT_DAY) {
       start = Date.now();
-      localStorage.setItem("creedTimerStart", start);
+      sessionStorage.setItem("timerStart", start);
       remaining = totalMs;
       days = START_DAYS;
     }
 
-    let hours = Math.floor((remaining / (1000*60*60)) % 24);
-    let minutes = Math.floor((remaining / (1000*60)) % 60);
-    let seconds = Math.floor((remaining / 1000) % 60);
+    var hours = Math.floor((remaining / (1000*60*60)) % 24);
+    var minutes = Math.floor((remaining / (1000*60)) % 60);
+    var seconds = Math.floor((remaining / 1000) % 60);
 
-    document.getElementById("days").innerText = String(days).padStart(2,"0");
-    document.getElementById("hours").innerText = String(hours).padStart(2,"0");
-    document.getElementById("minutes").innerText = String(minutes).padStart(2,"0");
-    document.getElementById("seconds").innerText = String(seconds).padStart(2,"0");
+    document.getElementById("days").innerHTML = String(days).padStart(2,"0");
+    document.getElementById("hours").innerHTML = String(hours).padStart(2,"0");
+    document.getElementById("minutes").innerHTML = String(minutes).padStart(2,"0");
+    document.getElementById("seconds").innerHTML = String(seconds).padStart(2,"0");
   }
 
   updateTimer();
